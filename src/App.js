@@ -3,11 +3,6 @@ import './App.css';
 import { useEffect, useState } from 'react';
 
 function App() {
-  let allInfo = [
-    {name: "Faizan", age: 23, profession: "Web Developer"},
-    {name: "Arif", age: 23, profession: "Web Designer"},
-    {name: "Asif", age: 27, profession: "App Developer"},
-  ];
   let today = new Date().getFullYear();
   return (
     <div className="App">
@@ -22,17 +17,31 @@ function App() {
         >
           Faizan Arif
         </a>
-        <Count></Count>
-        <AllUsers></AllUsers>
-        <Users></Users>
-        {allInfo.map(info => 
-        <Person data={info}></Person>
-        )}
-
+        <UsersList></UsersList>
       </header>      
     </div>
   );
 }
+
+function UsersList(){
+  let allInfo = [
+    {name: "Faizan", age: 23, profession: "Web Developer", id: '1a2'},
+    {name: "Arif", age: 23, profession: "Web Designer", id: '1a3'},
+    {name: "Asif", age: 27, profession: "App Developer", id: '1a4'},
+  ];
+  return(
+    <div>
+      <Count></Count>
+        <AllUsers></AllUsers>
+        <Users></Users>
+        <RandomUsers></RandomUsers>
+        {allInfo.map(info => 
+        <Person data={info} key={info.id}></Person>
+        )}
+    </div>
+  )
+}
+
 
 function Person (faizan){
   //for styles
@@ -54,6 +63,8 @@ function Person (faizan){
 }
 
 //API Implementation
+
+//json placeholder api
 //Method 1:
 function AllUsers(){
   const [users, setUsers] = useState([]);
@@ -67,7 +78,7 @@ function AllUsers(){
       <h1>Dynamic Users: {users.length}</h1>
       <ol>
         {
-          users.map(user => <li>{user.name}</li>)
+          users.map(user => <li key={user.id}>{user.name}</li>)
         }
       </ol>
     </div>
@@ -88,7 +99,32 @@ function Users() {
       <button onClick={handleUsers}>Load Users Mail</button>
       <ol>
         {
-          users.map(user => <li>{user.email}</li>)
+          users.map(user => <li key={user.username}>{user.email}</li>)
+        }
+        {console.log(users)}
+      </ol>
+    </div>
+  )
+}
+
+// random users api
+
+//Method 1:
+function RandomUsers(){
+  const [users, setUsers] = useState([]);
+  useEffect(()=>{
+    fetch('https://randomuser.me/api/?results=10') 
+    .then(res => res.json())
+    .then(data => setUsers(data.results));
+  },[])
+  return(
+    <div>
+      <h1>Random Users: {users.length}</h1>
+      <ol>
+        {
+          users.map(user => 
+          <li key={user.id.value}>{user.name.first}</li>
+          )
         }
       </ol>
     </div>
@@ -108,3 +144,9 @@ const handleCount = () => setCount(count+1);
   )
 }
 export default App;
+
+
+//Note: understanding
+
+
+
